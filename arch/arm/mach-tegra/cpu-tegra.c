@@ -53,7 +53,11 @@
 #define SYSTEM_PWRSAVE_MODE	(2)
 #define SYSTEM_MODE_END 		(SYSTEM_PWRSAVE_MODE + 1)
 #define SYSTEM_PWRSAVE_MODE_MAX_FREQ	(1000000)
+#ifdef CONFIG_OC_CPU
+unsigned int power_mode_table[SYSTEM_MODE_END] = {1000000,1300000,2000000};
+#else
 unsigned int power_mode_table[SYSTEM_MODE_END] = {1000000,1200000,1400000};
+#endif
 
 #define CAMERA_ENABLE_EMC_MINMIAM_RATE (667000000)
 #define EMC_MINMIAM_RATE (204000000)
@@ -461,9 +465,9 @@ static void edp_update_limit(void)
 #else
 	unsigned int i;
 	for (i = 0; freq_table[i].frequency != CPUFREQ_TABLE_END; i++) {
-		if (freq_table[i].frequency > limit) {
+		/*if (freq_table[i].frequency > limit) {
 			break;
-		}
+		}*/
 	}
 	BUG_ON(i == 0);	/* min freq above the limit or table empty */
 	edp_limit = freq_table[i-1].frequency;
@@ -1005,10 +1009,12 @@ static struct notifier_block tegra_cpu_pm_notifier = {
 	.notifier_call = tegra_pm_notify,
 };
 
+
 void rebuild_max_freq_table(max_rate)
 {
+        max_rate = 1700000;
 	power_mode_table[SYSTEM_NORMAL_MODE] = max_rate;
-	power_mode_table[SYSTEM_BALANCE_MODE] = max_rate - 200000;
+	power_mode_table[SYSTEM_BALANCE_MODE] = 1300000;
 	power_mode_table[SYSTEM_PWRSAVE_MODE] = SYSTEM_PWRSAVE_MODE_MAX_FREQ;
 }
 
@@ -1056,6 +1062,7 @@ static int tegra_cpu_init(struct cpufreq_policy *policy)
 
 	cpufreq_frequency_table_cpuinfo(policy, freq_table);
 	cpufreq_frequency_table_get_attr(freq_table, policy->cpu);
+	policy->max = 1300000;
 	policy->cur = tegra_getspeed(policy->cpu);
 	target_cpu_speed[policy->cpu] = policy->cur;
 

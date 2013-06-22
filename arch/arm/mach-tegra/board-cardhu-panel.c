@@ -712,8 +712,23 @@ static struct tegra_dc_mode cardhu_panel_modes_P1801[] = {
 
 static struct tegra_dc_mode cardhu_panel_modes[] = {
 	{
+#ifdef CONFIG_OC_GPU
+#ifdef CONFIG_OC_GPU_446
+		/* 1366x768@62Hz */
+	        .pclk = 70266666,
+#endif
+#ifdef CONFIG_OC_GPU_484
+		/* 1366x768@63Hz */
+		.pclk = 71400000,
+#endif
+#ifdef CONFIG_OC_GPU_520
+		/* 1366x768@65Hz */
+		.pclk = 73666666,
+#endif
+#else
 		/* 1366x768@60Hz */
 		.pclk = 68000000,
+#endif
 		.h_ref_to_sync = 4,
 		.v_ref_to_sync = 2,
 		.h_sync_width = 30,

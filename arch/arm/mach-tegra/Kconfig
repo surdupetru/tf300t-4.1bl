@@ -2,6 +2,48 @@ if ARCH_TEGRA
 
 comment "NVIDIA Tegra options"
 
+config OC_CPU
+        bool "ASUS TF300T CPU Overclocking !"
+        depends on TEGRA_EDP_LIMITS
+        default n
+        help
+          allow CPU clock rate up to 1.6Ghz
+
+config VOLTAGE
+        bool "ASUS TF300T Voltage Control"
+        depends on TEGRA_SILICON_PLATFORM
+        default n
+        help
+           Voltage control interface
+
+config OC_GPU
+        bool "ASUS TF300T GPU Overclocking !"   
+        depends on TEGRA_SILICON_PLATFORM   
+        default n
+        help
+          Choose y to overclock the GPU
+          If Off, GPU is default speed 416MHz
+          If On, GPU can be overclocked to 446 or 520 MHz !
+
+choice
+
+        depends on OC_GPU
+        prompt "GPU Overclocking is ON"
+        default OC_GPU_446
+        help
+          Select the GPU Overclock rate :
+          -------------------------------
+          If you are not sure what you are doing, leave this
+          option alone!
+        config OC_GPU_446
+          bool "446 MHz"
+        config OC_GPU_484
+          bool "484 MHz"
+        config OC_GPU_520
+          bool "520 MHz"
+
+endchoice
+
 config ARCH_TEGRA_2x_SOC
 	bool "Tegra 2 family SOC"
 	default y
@@ -456,6 +498,7 @@ config TEGRA_DYNAMIC_PWRDET
 config TEGRA_EDP_EXACT_FREQ
 	bool "Use maximum possible cpu frequency when EDP capping"
 	depends on TEGRA_EDP_LIMITS
+	depends on !OC_CPU
 	default y
 	help
 	  When enabled the cpu will run at the exact frequency

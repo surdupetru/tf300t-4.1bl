@@ -802,7 +802,7 @@ static struct clk tegra3_clk_twd = {
 		 atomic context which cannot take a mutex. */
 	.name     = "twd",
 	.ops      = &tegra3_twd_ops,
-	.max_rate = 1400000000,	/* Same as tegra_clk_cpu_cmplx.max_rate */
+	.max_rate = 1900000000,	/* Same as tegra_clk_cpu_cmplx.max_rate */
 	.mul      = 1,
 	.div      = 2,
 };
@@ -3338,14 +3338,14 @@ static struct clk tegra_pll_c = {
 	.ops       = &tegra_pll_ops,
 	.reg       = 0x80,
 	.parent    = &tegra_pll_ref,
-	.max_rate  = 1400000000,
+	.max_rate  = 1900000000,
 	.u.pll = {
 		.input_min = 2000000,
 		.input_max = 31000000,
 		.cf_min    = 1000000,
 		.cf_max    = 6000000,
 		.vco_min   = 20000000,
-		.vco_max   = 1400000000,
+		.vco_max   = 1900000000,
 		.freq_table = tegra_pll_c_freq_table,
 		.lock_delay = 300,
 	},
@@ -3426,7 +3426,7 @@ static struct clk tegra_pll_p = {
 		.cf_min    = 1000000,
 		.cf_max    = 6000000,
 		.vco_min   = 20000000,
-		.vco_max   = 1400000000,
+		.vco_max   = 1900000000,
 		.freq_table = tegra_pll_p_freq_table,
 		.lock_delay = 300,
 	},
@@ -3496,7 +3496,7 @@ static struct clk tegra_pll_a = {
 		.cf_min    = 1000000,
 		.cf_max    = 6000000,
 		.vco_min   = 20000000,
-		.vco_max   = 1400000000,
+		.vco_max   = 1900000000,
 		.freq_table = tegra_pll_a_freq_table,
 		.lock_delay = 300,
 	},
@@ -3616,6 +3616,18 @@ static struct clk tegra_pll_u = {
 };
 
 static struct clk_pll_freq_table tegra_pll_x_freq_table[] = {
+	/* 1.9 GHz */
+	{ 12000000, 1900000000, 850,  6,  1, 8},
+	{ 13000000, 1900000000, 915,  7,  1, 8},
+	{ 16800000, 1900000000, 708,  7,  1, 8},	/* actual: 1899.2 MHz */
+	{ 19200000, 1900000000, 885,  10, 1, 8},
+	{ 26000000, 1900000000, 950,  13, 1, 8},
+	/* 1.8 GHz */
+	{ 12000000, 1800000000, 850,  6,  1, 8},
+	{ 13000000, 1800000000, 915,  7,  1, 8},
+	{ 16800000, 1800000000, 708,  7,  1, 8},	/* actual: 1799.2 MHz */
+	{ 19200000, 1800000000, 885,  10, 1, 8},
+	{ 26000000, 1800000000, 900,  13, 1, 8},
 	/* 1.7 GHz */
 	{ 12000000, 1700000000, 850,  6,  1, 8},
 	{ 13000000, 1700000000, 915,  7,  1, 8},	/* actual: 1699.2 MHz */
@@ -3681,14 +3693,14 @@ static struct clk tegra_pll_x = {
 	.ops       = &tegra_pll_ops,
 	.reg       = 0xe0,
 	.parent    = &tegra_pll_ref,
-	.max_rate  = 1700000000,
+	.max_rate  = 1900000000,
 	.u.pll = {
 		.input_min = 2000000,
 		.input_max = 31000000,
 		.cf_min    = 1000000,
 		.cf_max    = 6000000,
 		.vco_min   = 20000000,
-		.vco_max   = 1700000000,
+		.vco_max   = 1900000000,
 		.freq_table = tegra_pll_x_freq_table,
 		.lock_delay = 300,
 	},
@@ -3699,7 +3711,7 @@ static struct clk tegra_pll_x_out0 = {
 	.ops       = &tegra_pll_div_ops,
 	.flags     = DIV_2 | PLLX,
 	.parent    = &tegra_pll_x,
-	.max_rate  = 850000000,
+	.max_rate  = 950000000,
 };
 
 
@@ -3966,7 +3978,7 @@ static struct clk tegra_clk_cclk_g = {
 	.inputs	= mux_cclk_g,
 	.reg	= 0x368,
 	.ops	= &tegra_super_ops,
-	.max_rate = 1700000000,
+	.max_rate = 1900000000,
 };
 
 static struct clk tegra_clk_cclk_lp = {
@@ -3991,7 +4003,7 @@ static struct clk tegra_clk_virtual_cpu_g = {
 	.name      = "cpu_g",
 	.parent    = &tegra_clk_cclk_g,
 	.ops       = &tegra_cpu_ops,
-	.max_rate  = 1700000000,
+	.max_rate  = 1900000000,
 	.u.cpu = {
 		.main      = &tegra_pll_x,
 		.backup    = &tegra_pll_p,
@@ -4021,7 +4033,7 @@ static struct clk tegra_clk_cpu_cmplx = {
 	.name      = "cpu",
 	.inputs    = mux_cpu_cmplx,
 	.ops       = &tegra_cpu_cmplx_ops,
-	.max_rate  = 1700000000,
+	.max_rate  = 1900000000,
 };
 
 static struct clk tegra_clk_cop = {
@@ -4792,6 +4804,25 @@ static struct cpufreq_frequency_table freq_table_1p5GHz[] = {
 	{14, CPUFREQ_TABLE_END },
 };
 
+static struct cpufreq_frequency_table freq_table_1p6GHz[] = {
+	{ 0,   51000 },
+	{ 1,  102000 },
+	{ 2,  204000 },
+	{ 3,  370000 },
+	{ 4,  475000 },
+	{ 5,  620000 },
+	{ 6,  760000 },
+	{ 7,  860000 },
+	{ 8, 1000000 },
+	{ 9, 1100000 },
+	{10, 1200000 },
+	{11, 1300000 },
+	{12, 1400000 },
+	{13, 1500000 },
+	{14, 1600000 },
+	{15, CPUFREQ_TABLE_END },
+};
+
 static struct cpufreq_frequency_table freq_table_1p7GHz[] = {
 	{ 0,   51000 },
 	{ 1,  102000 },
@@ -4811,13 +4842,56 @@ static struct cpufreq_frequency_table freq_table_1p7GHz[] = {
 	{15, CPUFREQ_TABLE_END },
 };
 
+static struct cpufreq_frequency_table freq_table_1p8GHz[] = {
+	{ 0,   51000 },
+	{ 1,  102000 },
+	{ 2,  204000 },
+	{ 3,  370000 },
+	{ 4,  475000 },
+	{ 5,  620000 },
+	{ 6,  760000 },
+	{ 7,  910000 },
+	{ 8, 1000000 },
+	{ 9, 1150000 },
+	{10, 1300000 },
+	{11, 1500000 },
+	{12, 1600000 },
+	{13, 1700000 },
+	{14, 1800000 },
+	{15, CPUFREQ_TABLE_END },
+};
+
+static struct cpufreq_frequency_table freq_table_1p9GHz[] = {
+	{ 0,   51000 },
+	{ 1,  102000 },
+	{ 2,  204000 },
+	{ 3,  370000 },
+	{ 4,  475000 },
+	{ 5,  620000 },
+	{ 6,  760000 },
+	{ 7,  910000 },
+	{ 8, 1000000 },
+	{ 9, 1150000 },
+	{10, 1300000 },
+	{11, 1400000 },
+	{12, 1500000 },
+	{13, 1600000 },
+	{14, 1700000 },
+	{15, 1800000 },
+	{16, 1900000 },
+	{17, CPUFREQ_TABLE_END },
+};
+
 static struct tegra_cpufreq_table_data cpufreq_tables[] = {
 	{ freq_table_300MHz, 0,  1 },
 	{ freq_table_1p0GHz, 2,  8 },
 	{ freq_table_1p3GHz, 2, 10 },
 	{ freq_table_1p4GHz, 2, 11 },
 	{ freq_table_1p5GHz, 2, 12 },
-	{ freq_table_1p7GHz, 2, 12 },
+	{ freq_table_1p6GHz, 2, 12 },
+	{ freq_table_1p7GHz, 2, 13 },
+	{ freq_table_1p8GHz, 2, 12 },
+	{ freq_table_1p9GHz, 2, 12 },
 };
 
 static int clip_cpu_rate_limits(
